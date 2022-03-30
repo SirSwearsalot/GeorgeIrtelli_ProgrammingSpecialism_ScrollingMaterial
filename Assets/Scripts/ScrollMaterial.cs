@@ -6,32 +6,27 @@ using UnityEngine;
 public class ScrollMaterial : MonoBehaviour
 {
 
-    public Material ScrollingMaterial;
-    private float Xcord, Ycord;
+    public MeshRenderer MR;
     [Range(-1, 1)]
-    [SerializeField] private float ScollRateX, ScollRateY;
+    [SerializeField] private float ScrollRateX, ScrollRateY;
 
     [HideInInspector] public int TextureIndex = 0;
     [HideInInspector] public string[] TextureTypes = new string[] { "_MainTex", "_MainTex1" };
 
-    public Texture ScrollTex;
     public Color TextureColor = new Color(1,1,1,1);
         
     void Start()
     {
-       GetComponent<MeshRenderer>().sharedMaterial = (ScrollingMaterial);
     }
 
     private void OnRenderObject()
     {
+        MR = GetComponent<MeshRenderer>();
 
-        GetComponent<MeshRenderer>().material.SetTexture(TextureTypes[TextureIndex],ScrollTex);
-        GetComponent<MeshRenderer>().material.SetColor("_Color",TextureColor);
+        Vector2 s = new Vector2(ScrollRateX, ScrollRateY);
 
-        Xcord += ScollRateX * Time.deltaTime;
-        Ycord += ScollRateY * Time.deltaTime;
-
-        //ScrollingMaterial.SetTextureOffset(TextureTypes[TextureIndex], new Vector2(Xcord, Ycord));
-        GetComponent<MeshRenderer>().material.SetTextureOffset(TextureTypes[TextureIndex], new Vector2(Xcord, Ycord));
+        //MR.material.SetTexture(TextureTypes[TextureIndex],ScrollTex);
+        MR.material.SetColor("_Color",TextureColor);
+        MR.material.mainTextureOffset += s * Time.deltaTime;
     }
 }
